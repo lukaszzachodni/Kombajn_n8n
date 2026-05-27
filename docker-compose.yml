@@ -24,7 +24,7 @@ services:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
-      - ../Kombajn/data/models/llm:/root/.ollama/models
+      - ../ai_models/llm:/root/.ollama/models
     deploy:
       resources:
         reservations:
@@ -41,7 +41,7 @@ services:
       - "8188:8188"
     volumes:
       - comfyui_data:/home/user/ComfyUI
-      - ../Kombajn/data/models:/home/user/ComfyUI/models
+      - ../ai_models:/home/user/ComfyUI/models
       - ./comfyui/extra_model_paths.yaml:/home/user/ComfyUI/extra_model_paths.yaml
     deploy:
       resources:
