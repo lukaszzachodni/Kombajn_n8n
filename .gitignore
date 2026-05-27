@@ -1,0 +1,17 @@
+# Docker
+docker-compose.override.yml
+.env
+
+# n8n
+node_modules/
+npm-debug.log
+
+# ComfyUI / Ollama data (if mapped to local dirs instead of named volumes)
+models/
+output/
+input/
+temp/
+
+# OS
+.DS_Store
+Thumbs.db
