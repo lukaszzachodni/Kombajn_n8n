@@ -1,0 +1,197 @@
+{
+  "updatedAt": "2026-05-31T17:33:46.152Z",
+  "createdAt": "2026-05-27T19:02:52.321Z",
+  "id": "iatNUhylcxSHOqdz",
+  "name": "My workflow",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "20c3517d-c0ee-41e1-8036-61f26d58d1bc",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.1-flash-lite-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.1-flash-lite-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Give me prompt to use in imagen, i need coloring page for children. Answer only with ready to use and pass to imagen prompt."
+            },
+            {}
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8c7a2f3e-4ff3-4690-a6ee-3daa5fb5c98b",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "yzqyvwvtaMZS0Zph",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://us-central1-aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/us-central1/publishers/google/models/imagen-4.0-generate-001:predict",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"instances\": [\n    {\n      \"prompt\": \"{{ $json.content.parts[0].text }}\"\n    }\n  ],\n  \"parameters\": {\n    \"sampleCount\": 1,\n    \"aspectRatio\": \"1:1\",\n    \"outputMimeType\": \"image/png\"\n  }\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "f6b94fcf-8398-4b2f-9a0f-57dfaa385cff",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const responseData = items[0].json;\nconst base64Image = responseData.predictions[0].bytesBase64Encoded;\n\nreturn [\n  {\n    json: {}, \n    binary: {\n      data: {\n        data: base64Image,\n        mimeType: 'image/png',\n        fileName: 'imagen_output.png'\n      }\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "097b57ce-6802-4f33-92c3-fb69043c4f96",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/example.png",
+        "dataPropertyName": "=data",
+        "options": {
+          "append": true
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        240
+      ],
+      "id": "b0ffa5c6-ff89-449e-9763-35f8d8b2d2f9",
+      "name": "Read/Write Files from Disk"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "aadb92bc-63c6-4400-b39b-1142af54d8d7",
+  "activeVersionId": null,
+  "versionCounter": 191,
+  "triggerCount": 0,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-05-27T19:02:52.327Z",
+      "createdAt": "2026-05-27T19:02:52.327Z",
+      "role": "workflow:owner",
+      "workflowId": "iatNUhylcxSHOqdz",
+      "projectId": "YmAMtY1OmlkZ7NKC",
+      "project": {
+        "updatedAt": "2026-05-27T19:01:14.052Z",
+        "createdAt": "2026-05-27T18:37:10.085Z",
+        "id": "YmAMtY1OmlkZ7NKC",
+        "name": "Łukasz Zachodni <lakis90@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "1b5c4b1b-5a66-4390-a63f-abc723cb38e5"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

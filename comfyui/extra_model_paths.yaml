@@ -1,0 +1,8 @@
+# ComfyUI extra model paths configuration
+# This file can be used to add additional paths for models
+# config:
+#     checkpoints: /path/to/checkpoints
+#     loras: /path/to/loras
+
+# Keeping it valid but empty to prevent crash
+{}

@@ -41,10 +41,11 @@ services:
       - AUTH_ENABLED=false
       - WEB_ENABLE_AUTH=false
       - JUPYTER_PASSWORD=
+      - COMFYUI_ARGS=--extra-model-paths-config /workspace/ComfyUI/extra_model_paths.yaml
     volumes:
       - comfyui_data:/workspace/ComfyUI
       - ../ai_models:/opt/ComfyUI/models
-      - ./comfyui/extra_model_paths.yaml:/opt/ComfyUI/extra_model_paths.yaml
+      - ./comfyui/extra_model_paths.yaml:/workspace/ComfyUI/extra_model_paths.yaml
     deploy:
       resources:
         reservations:
